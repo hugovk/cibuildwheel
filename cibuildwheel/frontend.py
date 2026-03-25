@@ -1,19 +1,23 @@
+from __future__ import annotations
+
 __lazy_modules__ = [
     "cibuildwheel.logger",
     "cibuildwheel.util.helpers",
     "collections",
-    "collections.abc",
     "shlex",
 ]
 
 import dataclasses
 import shlex
 import typing
-from collections.abc import Sequence
 from typing import Literal, Self, get_args
 
 from cibuildwheel.logger import log
 from cibuildwheel.util.helpers import parse_key_value_string
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 BuildFrontendName = Literal["pip", "build", "build[uv]", "uv"]
 

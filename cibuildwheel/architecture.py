@@ -1,7 +1,7 @@
+from __future__ import annotations
+
 __lazy_modules__ = [
-    "cibuildwheel.typing",
     "collections",
-    "collections.abc",
     "platform",
     "re",
     "shutil",
@@ -15,12 +15,17 @@ import shutil
 import subprocess
 import sys
 import typing
-from collections.abc import Set
 from enum import StrEnum, auto
-from typing import Final, Literal
+from typing import Final
 
 from cibuildwheel import errors
-from cibuildwheel.typing import PlatformName
+
+TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Set
+    from typing import Literal
+
+    from cibuildwheel.typing import PlatformName
 
 PRETTY_NAMES: Final[dict[PlatformName, str]] = {
     "linux": "Linux",
@@ -94,7 +99,7 @@ class Architecture(StrEnum):
     x86_64_iphonesimulator = auto()
 
     @staticmethod
-    def parse_config(config: str, platform: PlatformName) -> "set[Architecture]":
+    def parse_config(config: str, platform: PlatformName) -> set[Architecture]:
         result = set()
         for arch_str in re.split(r"[\s,]+", config):
             match arch_str:
@@ -118,7 +123,7 @@ class Architecture(StrEnum):
         return result
 
     @staticmethod
-    def native_arch(platform: PlatformName) -> "Architecture | None":
+    def native_arch(platform: PlatformName) -> Architecture | None:
         native_machine = platform_module.machine()
         native_architecture = Architecture(native_machine)
 
@@ -155,7 +160,7 @@ class Architecture(StrEnum):
         return native_architecture
 
     @staticmethod
-    def auto_archs(platform: PlatformName) -> "set[Architecture]":
+    def auto_archs(platform: PlatformName) -> set[Architecture]:
         native_arch = Architecture.native_arch(platform)
         if native_arch is None:
             return set()  # can't build anything on this platform
@@ -171,7 +176,7 @@ class Architecture(StrEnum):
         return result
 
     @staticmethod
-    def all_archs(platform: PlatformName) -> "set[Architecture]":
+    def all_archs(platform: PlatformName) -> set[Architecture]:
         all_archs_map = {
             "linux": {
                 Architecture.x86_64,
@@ -195,7 +200,7 @@ class Architecture(StrEnum):
         return all_archs_map[platform]
 
     @staticmethod
-    def bitness_archs(platform: PlatformName, bitness: Literal["64", "32"]) -> "set[Architecture]":
+    def bitness_archs(platform: PlatformName, bitness: Literal["64", "32"]) -> set[Architecture]:
         # This map maps 64-bit architectures to their 32-bit equivalents.
         archs_map = {
             Architecture.x86_64: Architecture.i686,

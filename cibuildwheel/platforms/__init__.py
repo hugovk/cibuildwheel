@@ -3,11 +3,12 @@ from __future__ import annotations
 __lazy_modules__ = ["sys"]
 
 import sys
-from typing import TYPE_CHECKING, Final, Protocol
+from typing import Final, Protocol
 
 from cibuildwheel import errors
 from cibuildwheel.platforms import android, ios, linux, macos, pyodide, windows
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path

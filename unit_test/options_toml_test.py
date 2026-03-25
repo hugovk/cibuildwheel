@@ -1,5 +1,4 @@
 import shlex
-from typing import TYPE_CHECKING
 
 import pytest
 
@@ -13,6 +12,7 @@ from cibuildwheel.options import (
     _resolve_cascade,
 )
 
+TYPE_CHECKING = False
 if TYPE_CHECKING:
     from pathlib import Path
 
